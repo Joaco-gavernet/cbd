@@ -1,8 +1,8 @@
 Program adicional;
-
+Uses sysutils;
 Const
-valoralto = '600';
-tot = '5';
+valoralto = 600;
+tot = 5;
 
 Type
 regD = record
@@ -10,27 +10,28 @@ regD = record
 	totVotos, validos, anulados, blanco: Integer;
 End;
 
-regM = record
+regMaestro = record
 	codProv: Integer;
 	totVotos, validos, anulados, blanco: Integer;
 	nomProv: String; 
 End;
 
-regR = record
+regResultado = record
 	procesados, validos, anulados, blanco: Integer;
 End;
 
 Detalle = file of regD;
-Maestro = file of regM;
-Resultado = file of regR;
+Maestro = file of regMaestro;
+Resultado = file of regResultado;
 
 Procedure leer(var det: Detalle; var reg_det: regD);
 Begin
-	if (not EOF(det)) then read(det,regD);
-	else regD.codProv := valoralto;
+	if (not EOF(det)) then read(det,reg_det)
+	else reg_det.codProv := valoralto;
 End;
 
-Procedure determinarMinimo(var reg_dets: Array[1..tot] of regD; var min: Integer);
+Procedure determinarMinimo(var reg_dets: Array of regD; var min: Integer);
+Var i: Integer;
 Begin
 	for i := 1 to tot do Begin
 		if (reg_dets[i].codProv < reg_dets[min].codProv) then Begin
@@ -40,7 +41,7 @@ Begin
 	End;
 End;
 
-Procedure minimo(var dets: Array[1..tot] of Detalle; var minimo: Detalle; var reg_dets: Array[1..tot] of regD);
+Procedure minimo(var dets: Array of Detalle; var min: regD; var reg_dets: Array of regD);
 Var indice_min: Integer;
 Begin
 	determinarMinimo(reg_dets,indice_min);
@@ -50,16 +51,18 @@ End;
 
 Var
 min: regD;
-regm: regM;
-regr: regR;
-dets = array[1..tot] of Detalle;
-reg_dets = array[1..tot] of regD;
-ant_prov, ant_loc: Integer;
+regm: regMaestro;
+regr: regResultado;
+m: Maestro;
+r: Resultado;
+dets: array[1..tot] of Detalle;
+reg_dets: array[1..tot] of regD;
+ant_prov, i: Integer;
 
 Begin
 	{ Inicializacion de archivos } 
 	for i:= 1 to tot do Begin
-		assign(dets[i],concat('detail-adicional',IntToStr(i));
+		assign(dets[i],concat('detail-adicional',IntToStr(i)));
 		reset(dets[i]);
 		leer(dets[i],reg_dets[i]);
 	End;
@@ -73,7 +76,6 @@ Begin
 	while (min.codProv <> valoralto) do Begin
 		ant_prov := min.codProv;
 		regm.codProv := min.codProv;
-		regm.nomProv := min.nomProv;
 		regm.totVotos := 0;
 		regm.validos := 0;
 		regm.anulados := 0;
