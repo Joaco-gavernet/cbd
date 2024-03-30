@@ -33,9 +33,9 @@ begin
 	if (not EOF(f)) then read(f,act);
 	while (not EOF(f)) and (x.cod <> act.cod) do read(f,act);
 	if (act.cod = x.cod) then begin
-		x.cod := valoralto;
+		act.cod := valoralto;
 		seek(f,filepos(f) -1);
-		write(f,x);
+		write(f,act);
 	end;
 end;
 
@@ -100,6 +100,7 @@ begin
 	writeln('3) Listar especies. ');
 
 	writeln('');
+	write('Ingresar opcion: ');
 	read(op);
 	while (op <> 0) do begin
 	case op of 
@@ -123,9 +124,11 @@ begin
 		end;
 	end;
 	writeln('');
+	write('Ingresar opcion: ');
 	read(op);
 	end;
 
+	{ Observacion: Tambien se podria haber optado por realizar la compactacion desde el archivo original hacia un archivo alternativo, luego eliminar el archivo original, y por ultimo renombrar el archivo alternativo como el original. }
 	copiarArchivo(f,nf);
 	seek(f,0);
 	truncate(f); { Vaciar archivo original, para realizar compactacion }
