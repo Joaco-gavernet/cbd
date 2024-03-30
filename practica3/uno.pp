@@ -22,7 +22,7 @@ end;
 
 procedure insertar(var f: arch; var x: especie);
 begin
-	if (filesize(f) > 0) then seek(f,filesize(f));
+	seek(f,filesize(f));
 	write(f,x);
 end;
 
@@ -133,4 +133,5 @@ begin
 	writeln('Archivo compactado correctamente. ');
 
 	close(f);
+	close(nf);
 end.
